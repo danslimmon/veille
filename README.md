@@ -1,7 +1,7 @@
-guet
+veille
 ====
 
-Guet is an event-based monitoring and alerting tool with a focus on
+Veille is an event-based monitoring and alerting tool with a focus on
 signal-to-noise ratio. Here are its goals:
 
 Signal-to-noise ratio aware

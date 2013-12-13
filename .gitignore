@@ -2,6 +2,8 @@
 *.o
 *.a
 *.so
+/pkg/
+/bin/
 
 # Folders
 _obj
