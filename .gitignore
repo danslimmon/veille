@@ -22,3 +22,7 @@ _cgo_export.*
 _testmain.go
 
 *.exe
+
+# Editor swap files
+.*.sw?
+*~
