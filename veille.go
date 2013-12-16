@@ -2,29 +2,29 @@ package main
 
 import (
     "fmt"
-
-    "github.com/danslimmon/veille"
+    "github.com/danslimmon/veille/lib"
 )
 
-// A service that we can probe, e.g. "REST API"
-type Service struct {
-    Name string
-    Probe probe.ServiceProbe
-}
-
-func (svc Service) Check() probe.ProbeResult {
-    return svc.Probe.Check()
-}
-
 func main() {
-    pr := probe.ScriptProbe{
-        "test_service",
-        "./probes",
+    fmt.Println("Reading config")
+    srv := veille.Service{"test_service"}
+    pr := veille.ScriptProbe{
+        srv,            //Srv
+        "test_service", //Name
+        2,              //OKInterval
+        1,              //ProblemInterval
+
+        "test_service", //Script
+        "./probes",     //Dir
         map[string]interface{}{
             "port": 80,
         },
     }
-        
-    srv := Service{"test_service", pr}
-    fmt.Println(srv.Check())
+
+    probes := make([]veille.Probe, 0, 256)
+    probes = append(probes, &pr)
+    err := veille.RunScheduler(probes)
+    if err != nil {
+        fmt.Println("Error running scheduler:", err)
+    }
 }

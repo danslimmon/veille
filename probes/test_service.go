@@ -4,8 +4,6 @@ import (
     "fmt"
     "flag"
     "encoding/json"
-
-    "github.com/danslimmon/veille"
 )
 
 var params_blob = flag.String("params", "", "The parameters with which the probe should be run")
@@ -13,7 +11,7 @@ var params_blob = flag.String("params", "", "The parameters with which the probe
 func main() {
     flag.Parse()
 
-    var params probe.ProbeResult
+    var params map[string]interface{}
     json.Unmarshal([]byte(*params_blob), &params)
 
     fmt.Print(`{"status":"ok","metrics":{}}`)
