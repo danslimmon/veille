@@ -17,25 +17,7 @@ func (e *ProbeError) Error() string {
 }
 
 // This interface defines a pr that checks whether a service is up.
-type Probe interface {
-    // The service that this probe monitors
-    GetService() Service
-    // Uniquely names the probe
-    GetName() string
-    // Interval (in seconds) at which to run the probe when the service is
-    // OK
-    GetOKInterval() int
-    // Interval (in seconds) at which to run the probe when the service is
-    // in a problem state.
-    GetProblemInterval() int
-
-    // Runs the check and returns its result
-    Check() ProbeResult
-}
-
-// A pr that simply runs a script with the parameters given.
-type ScriptProbe struct {
-    // Generic Probe fields
+type Probe struct {
     Srv Service
     Name string
     OKInterval int
@@ -49,14 +31,8 @@ type ScriptProbe struct {
     Params map[string]interface{}
 }
 
-// Probe interface getters
-func (pr *ScriptProbe) GetService() Service { return pr.Srv }
-func (pr *ScriptProbe) GetName() string { return pr.Name }
-func (pr *ScriptProbe) GetOKInterval() int { return pr.OKInterval }
-func (pr *ScriptProbe) GetProblemInterval() int { return pr.ProblemInterval }
-
 // Runs a script to check the status of a service.
-func (pr *ScriptProbe) Check() ProbeResult {
+func (pr *Probe) Check() ProbeResult {
     path := pr.scriptPath()
     fmt.Println("Running probe '" + path + "' with params", pr.Params)
 
@@ -77,7 +53,7 @@ func (pr *ScriptProbe) Check() ProbeResult {
 }
 
 // Returns the full path to the file containing the pr script.
-func (pr *ScriptProbe) scriptPath() string {
+func (pr *Probe) scriptPath() string {
     dir := pr.Dir
     if dir == "" {
         dir = DEFAULT_PROBES_DIR
@@ -94,5 +70,5 @@ type ProbeResult struct {
     // Any named metrics returned by the pr
     Metrics map[string]interface{}
     // The probe that generated this result
-    Pr Probe
+    Pr *Probe
 }

@@ -6,7 +6,7 @@ import (
 )
 
 // Starts a scheduler with the given services' probes.
-func RunScheduler(probes []Probe) error {
+func RunScheduler(probes []*Probe) error {
     sch := &scheduler{probes}
     if e := sch.Run(); e != nil {
         return e
@@ -15,33 +15,36 @@ func RunScheduler(probes []Probe) error {
 }
 
 type scheduler struct {
-    Probes []Probe
+    Probes []*Probe
 }
 
 func (sch *scheduler) Run() error {
-    result_chan := make(chan ProbeResult)
-    error_chan := make(chan ProbeError)
+    resultChan := make(chan ProbeResult)
+    errorChan := make(chan ProbeError)
+    confWatchChan := ConfigSubscribe()
 
     for _, pr := range sch.Probes {
-        go sch.startProbe(pr, result_chan, error_chan)
+        go sch.startProbe(pr, resultChan, errorChan)
     }
 
     fmt.Println("Starting probe loop")
     for {
         select {
-        case rslt := <-result_chan:
-            fmt.Printf("Got status '%s' from probe '%s'\n", rslt.Status, rslt.Pr.GetName())
-        case e := <-error_chan: 
-            fmt.Printf("Got error '%s' from probe '%s'\n", e, e.Pr.GetName())
+        case rslt := <-resultChan:
+            fmt.Printf("Got status '%s' from probe '%s'\n", rslt.Status, rslt.Pr.Name)
+        case e := <-errorChan: 
+            fmt.Printf("Got error '%s' from probe '%s'\n", e, e.Pr.Name)
+        case <- confWatchChan:
+            fmt.Println("Scheduler received notification of config reload")
         }
     }
 }
 
-func (sch *scheduler) startProbe(pr Probe, result_chan chan ProbeResult,
-                                 error_chan chan ProbeError) error {
-    tkr := time.NewTicker(time.Duration(pr.GetOKInterval()) * time.Second)
+func (sch *scheduler) startProbe(pr *Probe, resultChan chan ProbeResult,
+                                 errorChan chan ProbeError) error {
+    tkr := time.NewTicker(time.Duration(pr.OKInterval) * time.Second)
     for {
         <-tkr.C
-        result_chan <-pr.Check()
+        resultChan <-pr.Check()
     }
 }
