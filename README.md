@@ -95,6 +95,7 @@ Now that we have a test, we will tell Veille to run it every 20 seconds. Edit
 the file `veille.conf`, find the `services` section, and modify it thusly:
 
 ```yaml
+---
 services:
   - service_name: "Github API"
     tests:
