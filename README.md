@@ -57,7 +57,7 @@ an end-to-end test, which is the bread and butter of Veille.
 We'll start with a script that executes the actual test: making an HTTP GET
 request for `http://www.example.com` and making sure that we get back a 200
 response with the appropriate content. We'll implement it in Python 2 in the file
-`github_user_repos.py` (sure, you can write Veille tests in any language you
+`tests/github_user_repos.py` (sure, you can write Veille tests in any language you
 want, but right now there's only a library for Python).
 
 ```python
@@ -96,9 +96,9 @@ the file `veille.conf`, find the `services` section, and modify it thusly:
 
 ```yaml
 services:
-  - service_name: Github API
+  - service_name: "Github API"
     tests:
-      - functionality: List a user's projects
+      - functionality: "List a user's projects"
         script: github_user_repos.py
         run_every: 20
         alert_after: 3
