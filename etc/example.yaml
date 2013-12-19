@@ -3,9 +3,9 @@ services:
   - service_name: "Github API"
     tests:
       - functionality: "List a user's projects"
-        script: github_user_repos.py
+        script: "github_user_repos.py"
         run_every: 20
         alert_after: 3
         alert:
-            mode: email
-            target: developers@example.com
+            mode: "email"
+            target: "developers@example.com"

@@ -11,10 +11,29 @@ import (
 )
 
 var confFilePath string
-var confMap map[string]interface{}
+var conf Config
 
 var confWatcherExists = false
 var confWatcher *ConfigWatcher
+
+type Config struct {
+    Services []ServiceConfig
+}
+type ServiceConfig struct {
+    Service_Name string
+    Tests []TestConfig
+}
+type TestConfig struct {
+    Functionality string
+    Script string
+    Run_Every int
+    Alert_After int
+    Alert AlertConfig
+}
+type AlertConfig struct {
+    Mode string
+    Target string
+}
 
 
 type ConfigError struct { msg string }
@@ -53,31 +72,9 @@ func ConfigSubscribe() chan byte {
     return confWatcher.Subscribe()
 }
 
-// Returns the config value identified by the given strings.
-//
-// This may be a scalar, an array, or a map. It's up to the caller
-// to expect the right one.
-func GetConfValue(params ...string) (interface{}, error) {
-    if confMap == nil {
-        err := setConfFromFile(confFilePath)
-        if err != nil {
-            return nil, ConfigError{"Failed to read config file: " + err.Error()}
-        }
-    }
-
-    m := confMap
-    for _, p := range params[:len(params)-1] {
-        nextLevel, ok := m[p].(map[string]interface{})
-        if ! ok {
-            return nil, ConfigError{"Config tree ends too early at [" + p + "]"}
-        }
-        if nextLevel == nil {
-            return nil, ConfigError{"No config section '" + p + "'"}
-        }
-        m = nextLevel
-    }
-
-    return m[params[len(params)-1]], nil
+// Returns the Config struct that's been built by LoadConfig.
+func GetConfig() *Config {
+    return &conf
 }
 
 // Reads and parses the given config file, barfing if it's invalid.
@@ -88,17 +85,17 @@ func LoadConfig(path string) error {
     }
     confWatcherExists = true
 
-    err := setConfFromFile(path)
+    err := setConfigFromFile(path)
     if err != nil { return err }
 
     return nil
 }
 
 // Sets the global config map to the value read from the given YAML file.
-func setConfFromFile(path string) error {
+func setConfigFromFile(path string) error {
     yBlob, err := ioutil.ReadFile(path)
     if err != nil { return err }
-    err = goyaml.Unmarshal(yBlob, &confMap)
+    err = goyaml.Unmarshal(yBlob, &conf)
     if err != nil { return err }
     return nil
 }

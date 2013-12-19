@@ -5,9 +5,9 @@ import (
     "time"
 )
 
-// Starts a scheduler with the given services' probes.
-func RunScheduler(probes []*Probe) error {
-    sch := &scheduler{probes}
+// Starts a scheduler with the given services' tests.
+func RunScheduler(tests []*Test) error {
+    sch := &scheduler{tests}
     if e := sch.Run(); e != nil {
         return e
     }
@@ -15,36 +15,36 @@ func RunScheduler(probes []*Probe) error {
 }
 
 type scheduler struct {
-    Probes []*Probe
+    Tests []*Test
 }
 
 func (sch *scheduler) Run() error {
-    resultChan := make(chan ProbeResult)
-    errorChan := make(chan ProbeError)
+    resultChan := make(chan TestResult)
+    errorChan := make(chan TestError)
     confWatchChan := ConfigSubscribe()
 
-    for _, pr := range sch.Probes {
-        go sch.startProbe(pr, resultChan, errorChan)
+    for _, t := range sch.Tests {
+        go sch.startTest(t, resultChan, errorChan)
     }
 
-    fmt.Println("Starting probe loop")
+    fmt.Println("Starting test loop")
     for {
         select {
         case rslt := <-resultChan:
-            fmt.Printf("Got status '%s' from probe '%s'\n", rslt.Status, rslt.Pr.Name)
+            fmt.Printf("Got status '%s' from test '%s'\n", rslt.Status, rslt.T.Functionality)
         case e := <-errorChan: 
-            fmt.Printf("Got error '%s' from probe '%s'\n", e, e.Pr.Name)
+            fmt.Printf("Got error '%s' from test '%s'\n", e, e.T.Functionality)
         case <- confWatchChan:
             fmt.Println("Scheduler received notification of config reload")
         }
     }
 }
 
-func (sch *scheduler) startProbe(pr *Probe, resultChan chan ProbeResult,
-                                 errorChan chan ProbeError) error {
-    tkr := time.NewTicker(time.Duration(pr.OKInterval) * time.Second)
+func (sch *scheduler) startTest(t *Test, resultChan chan TestResult,
+                                 errorChan chan TestError) error {
+    tkr := time.NewTicker(time.Duration(t.RunEvery) * time.Second)
     for {
         <-tkr.C
-        resultChan <-pr.Check()
+        resultChan <-t.Check()
     }
 }

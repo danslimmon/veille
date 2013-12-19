@@ -6,27 +6,27 @@ import (
 )
 
 func main() {
-    fmt.Println("Reading config")
+    fmt.Println("Loading config")
     if err := veille.LoadConfig("./etc/example.yaml"); err != nil {
         panic(err)
     }
-    srv := veille.Service{"test_service"}
-    pr := &veille.Probe{
-        srv,            //Srv
-        "test_service", //Name
-        2,              //OKInterval
-        1,              //ProblemInterval
 
-        "test_service", //Script
-        "./probes",     //Dir
-        map[string]interface{}{
-            "port": 80,
-        },
+    conf := veille.GetConfig()
+    var tests []*veille.Test
+    for _, srvConf := range conf.Services {
+        srv := new(veille.Service)
+        srv.PopFromConf(srvConf)
+        fmt.Printf("Loaded service \"%s\"\n", srv.Name)
+
+        for _, testConf := range srvConf.Tests {
+            t := new(veille.Test)
+            t.PopFromConf(testConf, srv)
+            tests = append(tests, t)
+            fmt.Printf("Loaded test \"%s\" of service \"%s\"\n", t.Functionality, srv.Name)
+        }
     }
 
-    probes := make([]*veille.Probe, 0, 256)
-    probes = append(probes, pr)
-    err := veille.RunScheduler(probes)
+    err := veille.RunScheduler(tests)
     if err != nil {
         fmt.Println("Error running scheduler:", err)
     }

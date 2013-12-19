@@ -4,3 +4,7 @@ package veille
 type Service struct {
     Name string
 }
+
+func (srv *Service) PopFromConf(srvConf ServiceConfig) {
+    srv.Name = srvConf.Service_Name
+}
