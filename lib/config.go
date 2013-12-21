@@ -6,15 +6,15 @@ import (
     "os"
     "os/signal"
     "syscall"
+    "log"
 
     "launchpad.net/goyaml"
 )
 
-var confFilePath string
-var conf Config
-
-var confWatcherExists = false
-var confWatcher *ConfigWatcher
+type ConfigLoader interface {
+    GetConfig() (*Config, error)
+    ReloadConfig() (*Config, error)
+}
 
 type Config struct {
     Services []ServiceConfig
@@ -41,17 +41,18 @@ func (e ConfigError) Error() string { return "Config error: " + e.msg }
 
 // Sends notifications on channels whenever the config changes.
 type ConfigWatcher struct {
-    OutputChans []chan byte
+    Loader ConfigLoader
+    outputChans []chan *Config
 }
-func (cw *ConfigWatcher) Subscribe() chan byte {
-    ch := make(chan byte)
-    cw.OutputChans = append(cw.OutputChans, ch)
+func (cw *ConfigWatcher) Subscribe() chan *Config {
+    ch := make(chan *Config)
+    cw.outputChans = append(cw.outputChans, ch)
     return ch
 }
-func (cw *ConfigWatcher) Publish() {
-    fmt.Println("Notifying", len(cw.OutputChans), "goroutines of config reload")
-    for _, ch := range cw.OutputChans {
-        go cw.write(ch)
+func (cw *ConfigWatcher) Publish(c *Config) {
+    log.Println("Notifying", len(cw.outputChans), "goroutines of config reload")
+    for _, ch := range cw.outputChans {
+        go func() {ch <- c}()
     }
 }
 func (cw *ConfigWatcher) RegisterSignals() {
@@ -59,43 +60,45 @@ func (cw *ConfigWatcher) RegisterSignals() {
     go func() {
         for {
             <-ch
-            cw.Publish()
+            conf, err := cw.Loader.GetConfig()
+            if err != nil {
+                fmt.Println("Received a SIGHUP, but failed to parse config: " + err.Error())
+            }
+            cw.Publish(conf)
         }
     }()
     signal.Notify(ch, syscall.SIGHUP)
 }
-func (cw *ConfigWatcher) write(outputChan chan byte) {
-    outputChan <- 0
+
+// A ConfigLoader that loads from a YAML file.
+//
+// Must be initialized with SetPath() before you can load anything.
+type YamlFileConfigLoader struct {
+    Path string
+    cachedConfig *Config
 }
 
-func ConfigSubscribe() chan byte {
-    return confWatcher.Subscribe()
-}
-
-// Returns the Config struct that's been built by LoadConfig.
-func GetConfig() *Config {
-    return &conf
-}
-
-// Reads and parses the given config file, barfing if it's invalid.
-func LoadConfig(path string) error {
-    if ! confWatcherExists {
-        confWatcher = new(ConfigWatcher)
-        confWatcher.RegisterSignals()
+// Returns the active configuration.
+func (loader *YamlFileConfigLoader) GetConfig() (*Config, error) {
+    if loader.cachedConfig == nil {
+        cc, err := loader.parseFile(loader.Path)
+        if err != nil { return nil, err }
+        loader.cachedConfig = cc
     }
-    confWatcherExists = true
-
-    err := setConfigFromFile(path)
-    if err != nil { return err }
-
-    return nil
+    return loader.cachedConfig, nil
 }
 
-// Sets the global config map to the value read from the given YAML file.
-func setConfigFromFile(path string) error {
+// Returns the active configuration.
+func (loader *YamlFileConfigLoader) ReloadConfig() (*Config, error) {
+    return nil, nil
+}
+
+// Reads the YAML file and returns the parsed Config.
+func (loader *YamlFileConfigLoader) parseFile(path string) (*Config, error) {
+    conf := new(Config)
     yBlob, err := ioutil.ReadFile(path)
-    if err != nil { return err }
-    err = goyaml.Unmarshal(yBlob, &conf)
-    if err != nil { return err }
-    return nil
+    if err != nil { return nil, err }
+    err = goyaml.Unmarshal(yBlob, conf)
+    if err != nil { return nil, err }
+    return conf, nil
 }

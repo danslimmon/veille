@@ -6,9 +6,9 @@ import (
 )
 
 // Starts a scheduler with the given services' tests.
-func RunScheduler(tests []*Test) error {
+func RunScheduler(tests []*Test, cw *ConfigWatcher) error {
     sch := &scheduler{tests}
-    if e := sch.Run(); e != nil {
+    if e := sch.Run(cw); e != nil {
         return e
     }
     return nil
@@ -18,10 +18,10 @@ type scheduler struct {
     Tests []*Test
 }
 
-func (sch *scheduler) Run() error {
+func (sch *scheduler) Run(cw *ConfigWatcher) error {
     resultChan := make(chan TestResult)
     errorChan := make(chan TestError)
-    confWatchChan := ConfigSubscribe()
+    confWatchChan := cw.Subscribe()
 
     for _, t := range sch.Tests {
         go sch.startTest(t, resultChan, errorChan)
