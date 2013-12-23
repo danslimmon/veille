@@ -8,6 +8,9 @@ import (
 )
 
 func TestYamlFileConfigLoader_GetConfig(t *testing.T) {
+    t.Parallel()
+    SetTestLogger(t)
+
     confStr := `---
 services:
   - service_name: "Github API"
@@ -83,6 +86,7 @@ func TestConfigWatcher(t *testing.T) {
 
 func TestConfigWatcherRegisterSignals(t *testing.T) {
     t.Parallel()
+    SetTestLogger(t)
 
     conf := &Config{[]ServiceConfig{}}
     confWatcher := new(ConfigWatcher)
