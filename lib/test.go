@@ -1,7 +1,7 @@
 package veille
 
 import (
-    "fmt"
+    "log"
     "os/exec"
     "encoding/json"
 )
@@ -38,20 +38,20 @@ func (e *TestError) Error() string {
 // Runs a script to check the status of a service.
 func (t *Test) Check() TestResult {
     path := t.scriptPath()
-    fmt.Println("Running test '" + path + "'")
+    log.Printf("Running test '%s'\n", path)
 
     output, err := exec.Command(DEFAULT_TESTS_DIR + "/" + t.Script).CombinedOutput()
     if err != nil {
-        fmt.Println("Error running script '" + t.Script + "'")
-        fmt.Println("OUTPUT:")
-        fmt.Println("   ", string(output))
+        log.Printf("Error running script '%s'\n", t.Script)
+        log.Printf("OUTPUT:\n")
+        log.Printf("    %s\n", string(output))
         return TestResult{"error", nil, t}
     }
 
     var result TestResult
     json.Unmarshal(output, &result)
     result.T = t
-    fmt.Println("Test '" + path + "' returned status '" + result.Status + "'")
+    log.Printf("Test '%s' returned status '%s'\n", result.Status)
     return result
 }
 

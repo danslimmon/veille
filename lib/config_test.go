@@ -4,6 +4,7 @@ import (
     "testing"
 
     "os"
+    "syscall"
     "io/ioutil"
 )
 
@@ -84,18 +85,24 @@ func TestConfigWatcher(t *testing.T) {
 }
 
 
-func TestConfigWatcherRegisterSignals(t *testing.T) {
+func TestConfigWatcher_PublishOnSignals(t *testing.T) {
     t.Parallel()
     SetTestLogger(t)
 
     conf := &Config{[]ServiceConfig{}}
+    loader := &MockConfigLoader{
+        Config: conf,
+    }
     confWatcher := new(ConfigWatcher)
-    ch := confWatcher.Subscribe()
-    confWatcher.Publish(conf)
+    confWatcher.Loader = loader
 
-    newConf := <- ch
+    subCh := confWatcher.Subscribe()
+    sigCh := confWatcher.PublishOnSignals()
+
+    sigCh <- syscall.SIGHUP
+    newConf := <- subCh
     if conf != newConf {
-        t.Log("ConfigWatcher didn't return the new Config object")
+        t.Log("ConfigWatcher didn't return the new Config object in response to signal")
         t.Fail()
     }
 }

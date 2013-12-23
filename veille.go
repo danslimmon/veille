@@ -2,6 +2,8 @@ package main
 
 import (
     "log"
+    "syscall"
+    "os/signal"
 
     "github.com/danslimmon/veille/lib"
 )
@@ -29,6 +31,7 @@ func main() {
     }
 
     cw := new(veille.ConfigWatcher)
+    signal.Notify(cw.PublishOnSignals(), syscall.SIGHUP)
     cw.Loader = loader
     err = veille.RunScheduler(tests, cw)
     if err != nil {

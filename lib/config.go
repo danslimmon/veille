@@ -4,8 +4,6 @@ import (
     "fmt"
     "io/ioutil"
     "os"
-    "os/signal"
-    "syscall"
     "log"
 
     "launchpad.net/goyaml"
@@ -15,6 +13,17 @@ type ConfigLoader interface {
     GetConfig() (*Config, error)
     ReloadConfig() (*Config, error)
 }
+
+type MockConfigLoader struct {
+    Config *Config
+}
+func (loader *MockConfigLoader) GetConfig() (*Config, error) {
+    return loader.Config, nil
+}
+func (loader *MockConfigLoader) ReloadConfig() (*Config, error) {
+    return loader.Config, nil
+}
+
 
 type Config struct {
     Services []ServiceConfig
@@ -55,19 +64,26 @@ func (cw *ConfigWatcher) Publish(c *Config) {
         go func() {ch <- c}()
     }
 }
-func (cw *ConfigWatcher) RegisterSignals() {
+// Returns a channel that can be registered with signal.Notify to make
+// the ConfigWatcher publish whenever a signal is received.
+//
+// e.g.
+//
+//     signal.Notify(cw.PublishOnSignals(), syscall.SIGHUP)
+func (cw *ConfigWatcher) PublishOnSignals() (chan os.Signal) {
     ch := make(chan os.Signal)
     go func() {
         for {
-            <-ch
-            conf, err := cw.Loader.GetConfig()
+            <- ch
+            fmt.Println("Alpha")
+            conf, err := cw.Loader.ReloadConfig()
             if err != nil {
                 fmt.Println("Received a SIGHUP, but failed to parse config: " + err.Error())
             }
             cw.Publish(conf)
         }
     }()
-    signal.Notify(ch, syscall.SIGHUP)
+    return ch
 }
 
 // A ConfigLoader that loads from a YAML file.
