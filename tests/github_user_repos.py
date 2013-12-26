@@ -11,16 +11,17 @@ if rsp.getcode() != 200:
     veille.problem("Received HTTP {0} response to Github API request".format(rsp.getcode()))
 
 # Parse the JSON response
+rsp_body = None
 try:
-    rsp_body = rsp.body()
-    rsp_obj = json.load(rsp_body)
-except e:
+    rsp_body = rsp.read()
+    rsp_obj = json.loads(rsp_body)
+except Exception, e:
     veille.problem("Got error {0} when trying to parse Github API request".format(e),
                    extra_info={"github_response_body": rsp_body})
 
 # Make sure Veille is listed in the response
-if not [repo for repo in rsp_obj if rsp_obj["name"] == "veille"]:
+if not [repo for repo in rsp_obj if repo["name"] == "veille"]:
     veille.problem("No project named 'veille' in the Github response",
                    extra_info={"github_response_body": rsp_body})
 
-veille.ok()
+veille.ok("Found veille repo in Github API response")
