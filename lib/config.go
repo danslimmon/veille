@@ -75,7 +75,6 @@ func (cw *ConfigWatcher) PublishOnSignals() (chan os.Signal) {
     go func() {
         for {
             <- ch
-            fmt.Println("Alpha")
             conf, err := cw.Loader.ReloadConfig()
             if err != nil {
                 fmt.Println("Received a SIGHUP, but failed to parse config: " + err.Error())
