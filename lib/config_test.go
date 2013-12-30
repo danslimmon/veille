@@ -29,6 +29,7 @@ services:
     if err != nil { t.FailNow() }
     confFile.Write([]byte(confStr))
     confPath := confFile.Name()
+    defer os.Remove(confPath)
     confFile.Close()
 
     // Load the config from that temp file
@@ -62,9 +63,6 @@ services:
         t.Log("Failed to load test alert target")
         t.Fail()
     }
-
-    // Clean up
-    os.Remove(confPath)
 }
 
 
