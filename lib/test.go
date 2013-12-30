@@ -1,6 +1,7 @@
 package veille
 
 import (
+    "strings"
     "log"
     "os/exec"
     "encoding/json"
@@ -44,16 +45,22 @@ func (t *Test) Check() TestResult {
     path := t.scriptPath()
     log.Printf("Running test '%s'\n", path)
 
-    output, err := exec.Command(DEFAULT_TESTS_DIR + "/" + t.Script).CombinedOutput()
+    output, err := exec.Command(path).CombinedOutput()
     if err != nil {
         log.Printf("Error running script '%s'\n", t.Script)
         log.Printf("OUTPUT:\n")
         log.Printf("    %s\n", string(output))
-        return TestResult{"error", nil, t}
+        return TestResult{"error", err.Error(), nil, t}
     }
 
     var result TestResult
-    json.Unmarshal(output, &result)
+    err = json.Unmarshal(output, &result)
+    if err != nil {
+        log.Printf("Script '%s' didn't return valid JSON\n", t.Script)
+        log.Printf("Error: %s\n", err.Error())
+        log.Printf("OUTPUT:\n")
+        log.Printf("    %s\n", string(output))
+    }
     result.T = t
     return result
 }
@@ -64,14 +71,19 @@ func (t *Test) IncrementFailCount() {
 
 // Returns the full path to the file containing the test script.
 func (t *Test) scriptPath() string {
-    return DEFAULT_TESTS_DIR + "/" + t.Script + ".go"
+    if strings.HasPrefix(t.Script, "/") {
+        return t.Script
+    }
+    return DEFAULT_TESTS_DIR + "/" + t.Script
 }
 
 
 // The result returned when a Test is run.
 type TestResult struct {
-    // The status of the probe ("okay" or "problem")
+    // The status of the probe ("ok" or "problem")
     Status string
+    // A message providing details on the probe's result
+    Message string
     // Any named metrics returned by the pr
     Metrics map[string]interface{}
     // The probe that generated this result

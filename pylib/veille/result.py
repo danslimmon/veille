@@ -5,16 +5,14 @@ def problem(message, extra_info={}):
     print json.dumps({
         "status": "problem",
         "message": message,
-        "extra_info": extra_info,
-        "metrics": [],
+        "metrics": {},
     })
     sys.exit(0)
 
 def ok(message, extra_info={}):
     print json.dumps({
         "status": "ok",
-        "message": "message",
-        "extra_info": extra_info,
-        "metrics": [],
+        "message": message,
+        "metrics": {},
     })
     sys.exit(0)
