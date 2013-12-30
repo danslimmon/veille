@@ -3,11 +3,21 @@ package veille
 import (
     "fmt"
     "time"
+    "log"
 )
 
 // Starts a scheduler with the given services' tests.
-func RunScheduler(tests []*Test, cw *ConfigWatcher) error {
-    sch := &scheduler{tests}
+func RunScheduler(services []*Service, cw *ConfigWatcher) error {
+    var tests []*Test
+    for _, srv := range services {
+        for _, t := range srv.Tests {
+            tests = append(tests, t)
+        }
+    }
+    sch := &scheduler{
+        Services: services,
+        Tests: tests,
+    }
     if e := sch.Run(cw); e != nil {
         return e
     }
@@ -15,6 +25,7 @@ func RunScheduler(tests []*Test, cw *ConfigWatcher) error {
 }
 
 type scheduler struct {
+    Services []*Service
     Tests []*Test
 }
 
@@ -31,11 +42,11 @@ func (sch *scheduler) Run(cw *ConfigWatcher) error {
     for {
         select {
         case rslt := <-resultChan:
-            fmt.Printf("Got status '%s' from test '%s'\n", rslt.Status, rslt.T.Functionality)
+            log.Printf("Got status '%s' from test '%s'\n", rslt.Status, rslt.T.Functionality)
         case e := <-errorChan: 
-            fmt.Printf("Got error '%s' from test '%s'\n", e, e.T.Functionality)
+            log.Printf("Got error '%s' from test '%s'\n", e, e.T.Functionality)
         case <- confWatchChan:
-            fmt.Println("Scheduler received notification of config reload")
+            log.Println("Scheduler received notification of config reload")
         }
     }
 }

@@ -11,11 +11,15 @@ const DEFAULT_TESTS_DIR = "./tests"
 
 // Tests a given service.
 type Test struct {
+    // Configured
     Service *Service
     Functionality string
     Script string
     RunEvery int
     AlertAfter int
+
+    // Dynamic
+    FailCount int
 }
 
 func (t *Test) PopFromConf(testConf TestConfig, s *Service) {
@@ -53,6 +57,10 @@ func (t *Test) Check() TestResult {
     result.T = t
     log.Printf("Test '%s' returned status '%s'\n", result.Status)
     return result
+}
+
+func (t *Test) IncrementFailCount() {
+    t.FailCount += 1
 }
 
 // Returns the full path to the file containing the test script.
