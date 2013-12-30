@@ -60,6 +60,7 @@ func (t *Test) Check() TestResult {
         log.Printf("Error: %s\n", err.Error())
         log.Printf("OUTPUT:\n")
         log.Printf("    %s\n", string(output))
+        return TestResult{"error", err.Error(), nil, t}
     }
     result.T = t
     return result
