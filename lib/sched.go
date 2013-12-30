@@ -52,7 +52,7 @@ func (sch *scheduler) Run(cw *ConfigWatcher) error {
 }
 
 func (sch *scheduler) startTest(t *Test, resultChan chan TestResult,
-                                 errorChan chan TestError) error {
+                                errorChan chan TestError) error {
     tkr := time.NewTicker(time.Duration(t.RunEvery) * time.Second)
     for {
         <-tkr.C

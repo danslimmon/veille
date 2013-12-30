@@ -4,7 +4,7 @@ services:
     tests:
       - functionality: "List a user's projects"
         script: "github_user_repos.py"
-        run_every: 20
+        run_every: 5
         alert_after: 3
         alert:
             mode: "email"

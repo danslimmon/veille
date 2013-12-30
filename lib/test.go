@@ -55,7 +55,6 @@ func (t *Test) Check() TestResult {
     var result TestResult
     json.Unmarshal(output, &result)
     result.T = t
-    log.Printf("Test '%s' returned status '%s'\n", result.Status)
     return result
 }
 

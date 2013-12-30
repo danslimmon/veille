@@ -1,9 +1,0 @@
----
-services:
-  - name: test_service_alpha
-    detector:
-      script: alpha_json
-      params:
-        resp_time: 100
-        consecutive: 3
-        fail_interval: 1
