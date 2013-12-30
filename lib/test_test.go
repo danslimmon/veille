@@ -42,6 +42,35 @@ echo '{"status":"ok","message":"message","metrics":{}}'
     }
 }
 
+func TestTest_Check_MissingScript(t *testing.T) {
+    t.Parallel()
+    SetTestLogger(t)
+
+    f, e := ioutil.TempFile("", "veille_test_")
+    if e != nil {
+        t.Log("Error creating temp file:", e)
+        t.FailNow()
+    }
+    scriptPath := f.Name()
+    f.Close()
+    os.Remove(scriptPath)
+
+    test := Test{
+        Functionality: "Some arbitrary action works",
+        Script: scriptPath,
+    }
+    rslt := test.Check()
+
+    switch false {
+    case rslt.Status == "error":
+        t.Log("Got wrong status from test script")
+        t.FailNow()
+    case rslt.T.Functionality == test.Functionality:
+        t.Log("Test result populated with wrong test struct")
+        t.FailNow()
+    }
+}
+
 func TestTest_Check_BadJSON(t *testing.T) {
     t.Parallel()
     SetTestLogger(t)
