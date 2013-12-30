@@ -66,7 +66,11 @@ func (t *Test) Check() TestResult {
     return result
 }
 
-func (t *Test) IncrementFailCount() {
+func (t *Test) RegSuccess(rslt TestResult) {
+    t.FailCount = 0
+}
+
+func (t *Test) RegFailure(rslt TestResult) {
     t.FailCount += 1
 }
 

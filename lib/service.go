@@ -20,3 +20,9 @@ func (srv *Service) PopFromConf(srvConf ServiceConfig) {
     }
     log.Printf("Loaded service \"%s\"\n", srv.Name)
 }
+
+func (s *Service) RegSuccess(rslt TestResult) {
+}
+
+func (s *Service) RegFailure(rslt TestResult) {
+}

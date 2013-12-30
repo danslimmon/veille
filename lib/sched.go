@@ -18,7 +18,11 @@ func RunScheduler(services []*Service, cw *ConfigWatcher) error {
         Services: services,
         Tests: tests,
     }
-    if e := sch.Run(cw); e != nil {
+    ach, e := RunAlerter()
+    if e != nil {
+        return e
+    }
+    if e = sch.Run(cw, ach); e != nil {
         return e
     }
     return nil
@@ -29,13 +33,12 @@ type scheduler struct {
     Tests []*Test
 }
 
-func (sch *scheduler) Run(cw *ConfigWatcher) error {
+func (sch *scheduler) Run(cw *ConfigWatcher, alertChan chan AlertEvent) error {
     resultChan := make(chan TestResult)
-    errorChan := make(chan TestError)
     confWatchChan := cw.Subscribe()
 
     for _, t := range sch.Tests {
-        go sch.startTest(t, resultChan, errorChan)
+        go sch.startTest(t, resultChan)
     }
 
     fmt.Println("Starting test loop")
@@ -43,16 +46,25 @@ func (sch *scheduler) Run(cw *ConfigWatcher) error {
         select {
         case rslt := <-resultChan:
             log.Printf("Got status '%s' from test '%s'\n", rslt.Status, rslt.T.Functionality)
-        case e := <-errorChan: 
-            log.Printf("Got error '%s' from test '%s'\n", e, e.T.Functionality)
+            sch.processResult(rslt, alertChan)
         case <- confWatchChan:
             log.Println("Scheduler received notification of config reload")
         }
     }
 }
 
-func (sch *scheduler) startTest(t *Test, resultChan chan TestResult,
-                                errorChan chan TestError) error {
+func (sch *scheduler) processResult(rslt TestResult, alertChan chan AlertEvent) {
+    if rslt.Status != "ok" {
+        rslt.T.RegFailure(rslt)
+        rslt.T.Service.RegFailure(rslt)
+    } else {
+        rslt.T.RegSuccess(rslt)
+        rslt.T.Service.RegSuccess(rslt)
+    }
+    alertChan <- AlertEvent{&rslt}
+}
+
+func (sch *scheduler) startTest(t *Test, resultChan chan TestResult) error {
     tkr := time.NewTicker(time.Duration(t.RunEvery) * time.Second)
     for {
         <-tkr.C
