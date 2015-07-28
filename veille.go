@@ -1,15 +1,10 @@
 package main
 
-import (
-	"log"
-)
-
 func main() {
-	log.Println("Loading config")
-	err := LoadConfig()
+	var err error
+
+	err = LoadConfig()
 	if err != nil {
 		panic(err)
 	}
-
-	log.Println(Config)
 }
