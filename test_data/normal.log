@@ -1,0 +1,134 @@
+[1438041600] LOG ROTATION: DAILY
+[1438041600] LOG VERSION: 2.0
+[1438041600] CURRENT HOST STATE: api-dev;UP;HARD;1;(null)
+[1438041600] CURRENT HOST STATE: api-old;UP;HARD;1;SSH OK - Totally SSHed to host, no problem
+[1438041600] CURRENT HOST STATE: api-prod;UP;HARD;1;(null)
+[1438041600] CURRENT HOST STATE: db-001;DOWN;HARD;1;CRITICAL - Socket timeout after 10 seconds
+[1438041600] CURRENT HOST STATE: db-002;DOWN;HARD;1;CRITICAL - Socket timeout after 10 seconds
+[1438041600] CURRENT HOST STATE: log-004;UP;HARD;1;SSH OK - Totally SSHed to host, no problem
+[1438041600] CURRENT HOST STATE: nohost;UP;HARD;1;SSH OK - Totally SSHed to host, no problem
+[1438041600] CURRENT HOST STATE: site-000;UP;HARD;1;(null)
+[1438041600] CURRENT HOST STATE: site-001;UP;HARD;1;(null)
+[1438041600] CURRENT HOST STATE: site-002;UP;HARD;1;(null)
+[1438041600] CURRENT HOST STATE: web-002;DOWN;HARD;1;CRITICAL - Socket timeout after 10 seconds
+[1438041600] CURRENT HOST STATE: web-003;UP;HARD;1;SSH OK - Totally SSHed to host, no problem
+[1438041600] CURRENT HOST STATE: xmpp-000;UP;HARD;1;SSH OK - Totally SSHed to host, no problem
+[1438041600] CURRENT SERVICE STATE: site-000;site-000 HTTP;OK;HARD;1;TCP OK - 0.039 second response time on port 80
+[1438041600] CURRENT SERVICE STATE: site-000;site-000 HTTPS;OK;HARD;1;TCP OK - 0.058 second response time on port 443
+[1438041600] CURRENT SERVICE STATE: log-004;Logstash;OK;HARD;1;2 process matching java (> 0) (<= 2):OK
+[1438041600] CURRENT SERVICE STATE: api-prod;Awesome New API;OK;HARD;1;(null)
+[1438041600] CURRENT SERVICE STATE: api-prod;Old API without SSL;OK;HARD;1;OK: API health test passed.
+[1438041600] CURRENT SERVICE STATE: api-prod;Old API;OK;HARD;1;OK: API health test passed.
+[1438041600] CURRENT SERVICE STATE: api-dev;Old API without SSL;OK;HARD;1;OK: API health test passed.
+[1438041600] CURRENT SERVICE STATE: nohost;AWS Multi-Factor Authentication;OK;HARD;1;OK: All users have MFA enabled
+[1438041600] CURRENT SERVICE STATE: nohost;Third-Party Asset;OK;HARD;1;HTTP OK: HTTP/1.1 200 OK - 3073 bytes in 0.262 second response time
+[1438041600] CURRENT SERVICE STATE: nohost;Third-Party Service Account Balance Very Low;OK;HARD;1;Current balance: 444.53
+[1438041600] CURRENT SERVICE STATE: nohost;Third-Party Service Account Balance Warning;OK;HARD;1;Current balance: 444.53
+[1438041600] CURRENT SERVICE STATE: nohost;MySQL Backup for db;OK;HARD;1;OK: Most recent file with prefix 's3://my-backups/db/' is less than 240 minutes old
+[1438041600] CURRENT SERVICE STATE: nohost;SES email quota in development;OK;HARD;1;OK: We are well clear of our SES email quota.
+[1438041600] CURRENT SERVICE STATE: nohost;SES email quota in production;OK;HARD;1;OK: We are well clear of our SES email quota.
+[1438041600] CURRENT SERVICE STATE: nohost;SSL Cert Expiration;OK;HARD;1;(null)
+[1438041600] CURRENT SERVICE STATE: nohost;Corporate website HTTP;OK;HARD;1;HTTP OK: Status line output matched "200" - 30099 bytes in 0.681 second response time
+[1438041600] CURRENT SERVICE STATE: api-old;HTTP;OK;HARD;1;HTTP OK: Status line output matched "200" - 141 bytes in 0.190 second response time
+[1438041600] CURRENT SERVICE STATE: api-old;UDP;OK;HARD;1;OK: API health test passed.
+[1438041600] CURRENT SERVICE STATE: web-003;Disk Usage;OK;HARD;1;/: 37%used(1510MB/4034MB) /var: 19%used(5175MB/27718MB) (<80%) : OK
+[1438041600] CURRENT SERVICE STATE: web-003;System Memory;OK;HARD;1;(null)
+[1438041600] CURRENT SERVICE STATE: site-001;other API;OK;HARD;1;HTTP OK: Status line output matched "200" - 268 bytes in 0.339 second response time
+[1438041600] CURRENT SERVICE STATE: site-001;site-001 HTTP;OK;HARD;1;HTTP OK: Status line output matched "301" - 448 bytes in 0.103 second response time
+[1438041600] CURRENT SERVICE STATE: site-001;site-001 HTTPS;OK;HARD;1;HTTP OK: Status line output matched "200" - 18521 bytes in 0.641 second response time
+[1438041600] CURRENT SERVICE STATE: site-001;site-001 segfaults;OK;HARD;1;OK No data for 'stats.web.apache-error.segfault,0'
+[1438041600] CURRENT SERVICE STATE: site-002;site-002 HTTP;OK;HARD;1;TCP OK - 0.046 second response time on port 80
+[1438041600] CURRENT SERVICE STATE: site-002;site-002 HTTPS;OK;HARD;1;TCP OK - 0.044 second response time on port 443
+[1438041600] CURRENT SERVICE STATE: db-001;MySQL Replication Thread;CRITICAL;HARD;3;(Service Check Timed Out)
+[1438041600] CURRENT SERVICE STATE: db-002;MySQL;UNKNOWN;HARD;3;ERROR: Process name table : No response from remote host "104.237.152.29".
+[1438041600] CURRENT SERVICE STATE: xmpp-000;XMPP bot;OK;HARD;1;OK: Received proper response from XMPP bot
+[1438041722] SERVICE ALERT: api-dev;Old API without SSL;CRITICAL;SOFT;1;CRITICAL: Failed to write value to API within timeout
+[1438041782] SERVICE ALERT: api-dev;Old API without SSL;OK;SOFT;2;OK: API health test passed.
+[1438042322] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438042382] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438044812] Auto-save of retention data completed successfully.
+[1438048412] Auto-save of retention data completed successfully.
+[1438052012] Auto-save of retention data completed successfully.
+[1438055612] Auto-save of retention data completed successfully.
+[1438056842] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438056902] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438059212] Auto-save of retention data completed successfully.
+[1438060382] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438060442] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438062482] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438062542] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438062812] Auto-save of retention data completed successfully.
+[1438065962] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438066022] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438066412] Auto-save of retention data completed successfully.
+[1438068062] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438068122] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438070012] Auto-save of retention data completed successfully.
+[1438070162] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438070222] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438070582] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438070642] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438072142] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438072202] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438073612] Auto-save of retention data completed successfully.
+[1438075262] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438075322] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438075562] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438075622] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438077002] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438077062] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438077212] Auto-save of retention data completed successfully.
+[1438080062] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438080122] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438080812] Auto-save of retention data completed successfully.
+[1438080902] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438080962] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;2;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438081022] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;3;OK: Received proper response from XMPP bot
+[1438082642] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438082702] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438082762] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438082822] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438083782] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438083842] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438084412] Auto-save of retention data completed successfully.
+[1438087682] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438087742] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438088012] Auto-save of retention data completed successfully.
+[1438090622] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438090682] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438091612] Auto-save of retention data completed successfully.
+[1438094042] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438094102] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438095212] Auto-save of retention data completed successfully.
+[1438096082] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438096142] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438096442] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438096502] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438098302] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438098362] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438098812] Auto-save of retention data completed successfully.
+[1438099862] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438099922] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;2;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438099982] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;3;OK: Received proper response from XMPP bot
+[1438100582] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438100642] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438101302] SERVICE ALERT: api-old;UDP;CRITICAL;SOFT;1;CRITICAL: Incorrect value returned by API
+[1438101362] SERVICE ALERT: api-old;UDP;OK;SOFT;2;OK: API health test passed.
+[1438102412] Auto-save of retention data completed successfully.
+[1438103282] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438103342] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438103642] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438103702] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438103882] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438103942] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438105742] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438105802] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438106012] Auto-save of retention data completed successfully.
+[1438106942] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438107002] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438107902] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438107962] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438108682] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438108742] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
+[1438108982] SERVICE ALERT: xmpp-000;XMPP bot;CRITICAL;SOFT;1;CRITICAL: Didn't receive a valid read response from XMPP bot
+[1438109042] SERVICE ALERT: xmpp-000;XMPP bot;OK;SOFT;2;OK: Received proper response from XMPP bot
