@@ -18,6 +18,10 @@ type LogEntry interface {
 	// Type returns the type of LogEntry you're looking at. See the
 	// individual implementations for the possible Type values.
 	Type() string
+	// StrVal returns any uncategorized information in the log entry.
+	// This is used for miscellaneous entry types like log rotation
+	// interval and log version.
+	StrVal() string
 }
 
 // LogRotationLogEntry represents a Nagios log line that specifies how
@@ -31,6 +35,7 @@ type LogRotationLogEntry struct {
 
 func (ent *LogRotationLogEntry) Timestamp() time.Time { return ent.T }
 func (ent *LogRotationLogEntry) Type() string         { return "rotation" }
+func (ent *LogRotationLogEntry) StrVal() string       { return ent.RotationInterval }
 
 // ParseLogLine takes a line from the Nagios log and returns a
 // LogEntry.
