@@ -13,7 +13,7 @@ func ProcessFiles(arguments map[string]interface{}) error {
 
 	logFilesGeneric = arguments["<logfile>"]
 	logFiles, _ = logFilesGeneric.([]string)
-	entries, err = ReadFiles(logFiles)
+	entries, err = ParseFiles(logFiles)
 	log.Info(entries)
 	return err
 }
