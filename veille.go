@@ -9,12 +9,12 @@ func ProcessFiles(arguments map[string]interface{}) error {
 	var err error
 	var logFilesGeneric interface{}
 	var logFiles []string
-	var entries []LogEntry
+	var states []State
 
 	logFilesGeneric = arguments["<logfile>"]
 	logFiles, _ = logFilesGeneric.([]string)
-	entries, err = ParseFiles(logFiles)
-	log.Info(entries)
+	states, err = ParseFiles(logFiles)
+	log.Info(states)
 	return err
 }
 
