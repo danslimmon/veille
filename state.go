@@ -20,7 +20,8 @@ type State interface {
 	// this returns the empty string.
 	Servicename() string
 	// Status returns the Nagios status that we've recorded. That's
-	// usually "OK", "CRITICAL", or "WARNING".
+	// usually "OK", "CRITICAL", or "WARNING" for services and "UP" or
+	// "DOWN" for hosts.
 	Status() string
 	// Hardness returns the Nagios "hardness" of the status we've
 	// recorded. That's either "SOFT" or "HARD".

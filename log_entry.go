@@ -37,7 +37,7 @@ func ParseLogLine(logLine string) (st State, hasState bool, err error) {
 	switch beforeColon {
 	default:
 		return nil, false, nil
-	case "CURRENT HOST STATUS":
+	case "CURRENT HOST STATE":
 		return ParseHostStateLogLine(timestamp, remainder)
 	}
 	return nil, false, errors.New(fmt.Sprintf("Unable to parse log entry beginning with '%s'", beforeColon))

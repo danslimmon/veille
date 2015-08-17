@@ -44,7 +44,7 @@ func teardownInputTest(tmpFile *os.File) {
 }
 
 // Tests basic functionality of ParseFile().
-func TestParseFile(t *testing.T) {
+func TestEmptyFile(t *testing.T) {
 	t.Parallel()
 	var err error
 	var states []State
