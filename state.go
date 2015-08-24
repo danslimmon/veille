@@ -32,7 +32,7 @@ type State interface {
 }
 
 // HostState contains information about the state of a host object
-// in Nagios. It implements the Status interface.
+// in Nagios. It implements the State interface.
 type HostState struct {
 	timestamp    time.Time
 	hostname     string
@@ -51,4 +51,28 @@ func (hs HostState) PluginOutput() string { return hs.pluginOutput }
 
 func NewHostState(timestamp time.Time, hostname, status, hardness, pluginOutput string) HostState {
 	return HostState{timestamp, hostname, status, hardness, pluginOutput}
+}
+
+// ServiceState contains information about the state of a service object
+// in Nagios. It implements the State interface.
+type ServiceState struct {
+	timestamp    time.Time
+	hostname     string
+	servicename  string
+	status       string
+	hardness     string
+	pluginOutput string
+}
+
+func (hs ServiceState) Timestamp() time.Time { return hs.timestamp }
+func (hs ServiceState) ObjectType() string   { return "SERVICE" }
+func (hs ServiceState) Hostname() string     { return hs.hostname }
+func (hs ServiceState) Servicename() string  { return hs.servicename }
+func (hs ServiceState) Status() string       { return hs.status }
+func (hs ServiceState) Hardness() string     { return hs.hardness }
+func (hs ServiceState) PluginOutput() string { return hs.pluginOutput }
+
+func NewServiceState(timestamp time.Time, hostname, servicename, status,
+	hardness, pluginOutput string) ServiceState {
+	return ServiceState{timestamp, hostname, servicename, status, hardness, pluginOutput}
 }

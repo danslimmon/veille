@@ -39,6 +39,8 @@ func ParseLogLine(logLine string) (st State, hasState bool, err error) {
 		return nil, false, nil
 	case "CURRENT HOST STATE":
 		return ParseHostStateLogLine(timestamp, remainder)
+	case "CURRENT SERVICE STATE":
+		return ParseServiceStateLogLine(timestamp, remainder)
 	}
 	return nil, false, errors.New(fmt.Sprintf("Unable to parse log entry beginning with '%s'", beforeColon))
 }
@@ -61,6 +63,29 @@ func ParseHostStateLogLine(timestamp time.Time, remainder string) (State, bool, 
 		"timestamp": st.Timestamp(),
 		"hostname":  st.Hostname(),
 		"status":    st.Status(),
+	}).Debug("Parsed log entry")
+	return st, true, nil
+}
+
+// ParseCurrentServiceStateLogLine parses a log line that we already know
+// indicates the current status of a given host.
+func ParseServiceStateLogLine(timestamp time.Time, remainder string) (State, bool, error) {
+	var re *regexp.Regexp
+	var st State
+	var groups []string
+
+	re = regexp.MustCompile(`CURRENT SERVICE STATE: ([^;]+);([^;]+);([A-Z]+);([A-Z]+);[^;]+;(.*)$`)
+	groups = re.FindStringSubmatch(remainder)
+	if groups == nil {
+		return nil, false, errors.New(fmt.Sprintf("Unable to parse current host status for log line '%s'", remainder))
+	}
+
+	st = NewServiceState(timestamp, groups[1], groups[2], groups[3], groups[4], groups[5])
+	log.WithFields(log.Fields{
+		"timestamp":   st.Timestamp(),
+		"hostname":    st.Hostname(),
+		"servicename": st.Servicename(),
+		"status":      st.Status(),
 	}).Debug("Parsed log entry")
 	return st, true, nil
 }
