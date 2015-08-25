@@ -112,3 +112,49 @@ func TestParseLog_CurrentServiceState(t *testing.T) {
 		t.Fail()
 	}
 }
+
+// Tests the parsing of a log line that contains a service alert.
+func TestParseLog_ServiceAlert(t *testing.T) {
+	t.Parallel()
+	var err error
+	var hasState bool
+	var st State
+
+	st, hasState, err = ParseLogLine("[1438041722] SERVICE ALERT: api-dev;Old API without SSL;CRITICAL;SOFT;1;CRITICAL: Failed to write value to API within timeout")
+	if err != nil {
+		t.Log("Got error when parsing log line:", err)
+		t.FailNow()
+	}
+	if !hasState {
+		t.Log("Missing state information when parsing SERVICE ALERT line")
+		t.FailNow()
+	}
+	if st.Timestamp().Unix() != 1438041722 {
+		t.Log("Wrong timestamp from SERVICE ALERT line; expected 1438041722 but got", st.Timestamp().Unix())
+		t.Fail()
+	}
+	if st.ObjectType() != "SERVICE" {
+		t.Log("Wrong object type from SERVICE ALERT line; expected SERVICE but got", st.ObjectType())
+		t.Fail()
+	}
+	if st.Hostname() != "api-dev" {
+		t.Log("Wrong hostname from SERVICE ALERT line; expected api-old but got", st.Hostname())
+		t.Fail()
+	}
+	if st.Servicename() != "Old API without SSL" {
+		t.Log("Wrong servicename from SERVICE ALERT line:", st.Servicename())
+		t.Fail()
+	}
+	if st.Status() != "CRITICAL" {
+		t.Log("Non-CRITICAL status from SERVICE ALERT line:", st.Status())
+		t.Fail()
+	}
+	if st.Hardness() != "SOFT" {
+		t.Log("Non-SOFT hardness from SERVICE ALERT line:", st.Hardness())
+		t.Fail()
+	}
+	if st.PluginOutput() != "CRITICAL: Failed to write value to API within timeout" {
+		t.Log("Wrong plugin output from SERVICE ALERT line:", st.PluginOutput())
+		t.Fail()
+	}
+}
