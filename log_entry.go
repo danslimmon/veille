@@ -19,6 +19,7 @@ func ParseLogLine(logLine string) (st State, hasState bool, err error) {
 	var remainder, beforeColon string
 	var timestampInt64 int64
 	var timestamp time.Time
+	var colonInd int
 
 	re = regexp.MustCompile(`^\[([0-9]+)\] (.*)`)
 	groups = re.FindStringSubmatch(logLine)
@@ -33,7 +34,12 @@ func ParseLogLine(logLine string) (st State, hasState bool, err error) {
 	timestamp = time.Unix(timestampInt64, 0)
 
 	remainder = groups[2]
-	beforeColon = remainder[:strings.IndexByte(remainder, ':')]
+	colonInd = strings.IndexByte(remainder, ':')
+	if colonInd == -1 {
+		return nil, false, nil
+	}
+
+	beforeColon = remainder[:colonInd]
 	switch beforeColon {
 	default:
 		return nil, false, nil

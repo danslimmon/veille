@@ -4,20 +4,29 @@ import (
 	"testing"
 )
 
-func TestParseLog_LogRotation(t *testing.T) {
+// Tests the parsing of a couple log lines that don't contain state info
+func TestParseLog_NonStateful(t *testing.T) {
 	t.Parallel()
 	var err error
 	var hasState bool
 	var st State
+	var line string
+	var lines []string
 
-	st, hasState, err = ParseLogLine("[1438041600] LOG ROTATION: DAILY")
-	if err != nil {
-		t.Log("Got error when parsing log line:", err)
-		t.FailNow()
+	lines = []string{
+		"[1438041600] LOG ROTATION: DAILY",
+		"[1438044812] Auto-save of retention data completed successfully.",
 	}
-	if hasState {
-		t.Log("Got state information when parsing stateless log line:", st)
-		t.FailNow()
+	for _, line = range lines {
+		st, hasState, err = ParseLogLine(line)
+		if err != nil {
+			t.Log("Got error when parsing log line:", err)
+			t.FailNow()
+		}
+		if hasState {
+			t.Log("Got state information when parsing stateless log line:", st)
+			t.FailNow()
+		}
 	}
 }
 
