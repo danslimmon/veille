@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -29,6 +30,10 @@ type State interface {
 	// PluginOutput returns the output of the most recent check for
 	// the Nagios object.
 	PluginOutput() string
+
+	// ObjIdent returns a string that uniquely identifies the Nagios
+	// object that this state describes. Useful for hash-keying.
+	ObjIdent() string
 }
 
 // HostState contains information about the state of a host object
@@ -41,13 +46,14 @@ type HostState struct {
 	pluginOutput string
 }
 
-func (hs HostState) Timestamp() time.Time { return hs.timestamp }
-func (hs HostState) ObjectType() string   { return "HOST" }
-func (hs HostState) Hostname() string     { return hs.hostname }
-func (hs HostState) Servicename() string  { return "" }
-func (hs HostState) Status() string       { return hs.status }
-func (hs HostState) Hardness() string     { return hs.hardness }
-func (hs HostState) PluginOutput() string { return hs.pluginOutput }
+func (st HostState) Timestamp() time.Time { return st.timestamp }
+func (st HostState) ObjectType() string   { return "HOST" }
+func (st HostState) Hostname() string     { return st.hostname }
+func (st HostState) Servicename() string  { return "" }
+func (st HostState) Status() string       { return st.status }
+func (st HostState) Hardness() string     { return st.hardness }
+func (st HostState) PluginOutput() string { return st.pluginOutput }
+func (st HostState) ObjIdent() string     { return st.hostname }
 
 func NewHostState(timestamp time.Time, hostname, status, hardness, pluginOutput string) HostState {
 	return HostState{timestamp, hostname, status, hardness, pluginOutput}
@@ -64,13 +70,16 @@ type ServiceState struct {
 	pluginOutput string
 }
 
-func (hs ServiceState) Timestamp() time.Time { return hs.timestamp }
-func (hs ServiceState) ObjectType() string   { return "SERVICE" }
-func (hs ServiceState) Hostname() string     { return hs.hostname }
-func (hs ServiceState) Servicename() string  { return hs.servicename }
-func (hs ServiceState) Status() string       { return hs.status }
-func (hs ServiceState) Hardness() string     { return hs.hardness }
-func (hs ServiceState) PluginOutput() string { return hs.pluginOutput }
+func (st ServiceState) Timestamp() time.Time { return st.timestamp }
+func (st ServiceState) ObjectType() string   { return "SERVICE" }
+func (st ServiceState) Hostname() string     { return st.hostname }
+func (st ServiceState) Servicename() string  { return st.servicename }
+func (st ServiceState) Status() string       { return st.status }
+func (st ServiceState) Hardness() string     { return st.hardness }
+func (st ServiceState) PluginOutput() string { return st.pluginOutput }
+func (st ServiceState) ObjIdent() string {
+	return fmt.Sprintf("%s;%s", st.hostname, st.servicename)
+}
 
 func NewServiceState(timestamp time.Time, hostname, servicename, status,
 	hardness, pluginOutput string) ServiceState {

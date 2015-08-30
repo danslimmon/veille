@@ -1,22 +1,33 @@
 package main
 
 import (
-	log "github.com/Sirupsen/logrus"
+	//log "github.com/Sirupsen/logrus"
 	"github.com/docopt/docopt-go"
 )
 
 func ProcessFiles(arguments map[string]interface{}) error {
+	return nil
+}
+
+/*
 	var err error
 	var logFilesGeneric interface{}
 	var logFiles []string
 	var states []State
+	var metrics []*Metric
 
 	logFilesGeneric = arguments["<logfile>"]
 	logFiles, _ = logFilesGeneric.([]string)
+
 	states, err = ParseFiles(logFiles)
-	log.Info(states)
+	if err != nil {
+		return err
+	}
+	metrics, err = CrunchMetrics(states, []int{30})
+	log.Info(metrics)
 	return err
 }
+*/
 
 func main() {
 	var err error
