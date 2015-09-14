@@ -2,14 +2,12 @@ package main
 
 import (
 	//log "github.com/Sirupsen/logrus"
+	"fmt"
 	"github.com/docopt/docopt-go"
+	"time"
 )
 
 func ProcessFiles(arguments map[string]interface{}) error {
-	return nil
-}
-
-/*
 	var err error
 	var logFilesGeneric interface{}
 	var logFiles []string
@@ -23,11 +21,14 @@ func ProcessFiles(arguments map[string]interface{}) error {
 	if err != nil {
 		return err
 	}
-	metrics, err = CrunchMetrics(states, []int{30})
-	log.Info(metrics)
+	metrics, err = CrunchMetrics(states, time.Now().Add(time.Duration(120*24)*time.Hour), CrunchOptions{[]int{30, 90}, 15})
+	for _, m := range metrics {
+		for _, point := range m.Timeseries {
+			fmt.Printf("%s %f %d\n", m.Name, point.Value, point.Timestamp.Unix())
+		}
+	}
 	return err
 }
-*/
 
 func main() {
 	var err error

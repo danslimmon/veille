@@ -50,7 +50,7 @@ func TestCrunchMetrics_SingleOutage(t *testing.T) {
 		t.FailNow()
 	}
 
-	if len(metrics) != 4 {
+	if len(metrics) != 2 {
 		t.Log("Wrong number of metrics: expected 4 but got", len(metrics))
 		t.FailNow()
 	}

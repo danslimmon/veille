@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -75,7 +77,7 @@ func CrunchMetrics(states []State, end time.Time, co CrunchOptions) ([]*Metric, 
 			var met *Metric
 
 			met = &Metric{
-				Name:       fmt.Sprintf("veille.hostname.servicename.%d-day", wSize),
+				Name:       metricName(svcStates[0], wSize),
 				Timeseries: make([]TSPoint, 0),
 			}
 			prevStatus = svcStates[0].Status()
@@ -112,17 +114,26 @@ func CrunchMetrics(states []State, end time.Time, co CrunchOptions) ([]*Metric, 
 	return metrics, nil
 }
 
+// metricName returns a Graphite metric name to use.
+func metricName(st State, windowSize int) string {
+	var re *regexp.Regexp
+	re = regexp.MustCompile(`[^A-Za-z0-9-]+`)
+	return fmt.Sprintf("veille.rolling.%s.%s.%d-day",
+		strings.ToLower(re.ReplaceAllLiteralString(st.Hostname(), "-")),
+		strings.ToLower(re.ReplaceAllLiteralString(st.Servicename(), "-")),
+		windowSize,
+	)
+}
+
 // downSecs calculates the number of seconds of downtime in the interval.
 //
 // It returns the integer number of seconds of downtime in the interval, as well as the
 // service's status at the end of the interval.
 func downSecs(statesInStep []State, prevStatus string, start, end time.Time) (int, string) {
-	var status string
 	var lastChange time.Time
 	var st State
 	var rslt int
 
-	status = prevStatus
 	lastChange = start
 	for _, st = range statesInStep {
 		if prevStatus == st.Status() {
@@ -131,14 +142,14 @@ func downSecs(statesInStep []State, prevStatus string, start, end time.Time) (in
 		if st.Status() != "CRITICAL" {
 			rslt += int(st.Timestamp().Sub(lastChange) / time.Second)
 		}
-		status = st.Status()
+		prevStatus = st.Status()
 		lastChange = st.Timestamp()
 	}
 
-	if status == "CRITICAL" {
+	if prevStatus == "CRITICAL" {
 		rslt += int(end.Sub(lastChange) / time.Second)
 	}
-	return rslt, status
+	return rslt, prevStatus
 }
 
 // statesInInterval filters the given States down to the interval.
