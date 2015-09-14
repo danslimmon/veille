@@ -12,6 +12,7 @@ func ProcessFiles(arguments map[string]interface{}) error {
 	var logFilesGeneric interface{}
 	var logFiles []string
 	var states []State
+	var conf Config
 	var metrics []*Metric
 
 	logFilesGeneric = arguments["<logfile>"]
@@ -21,7 +22,14 @@ func ProcessFiles(arguments map[string]interface{}) error {
 	if err != nil {
 		return err
 	}
-	metrics, err = CrunchMetrics(states, time.Now().Add(time.Duration(120*24)*time.Hour), CrunchOptions{[]int{30, 90}, 15})
+	conf, err = getConfig()
+	if err != nil {
+		return err
+	}
+	fmt.Println(conf)
+	return nil
+
+	metrics, err = CrunchMetrics(states, time.Now().Add(time.Duration(120*24)*time.Hour), conf)
 	for _, m := range metrics {
 		for _, point := range m.Timeseries {
 			fmt.Printf("%s %f %d\n", m.Name, point.Value, point.Timestamp.Unix())

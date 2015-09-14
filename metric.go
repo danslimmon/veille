@@ -18,19 +18,8 @@ type Metric struct {
 	Timeseries []TSPoint
 }
 
-// CrunchOptions describes the metrics that will be created by CrunchMetrics.
-type CrunchOptions struct {
-	// A list of windows (in days) for which to generate rolling downtime metrics.
-	//
-	// For example, []int{30,90,365} would result in rolling 30-, 90-, and 365-day
-	// downtime metrics.
-	Windows []int
-	// Interval (in minutes) between data points for the rolling downtime metrics.
-	TSInterval int
-}
-
 // CrunchMetrics takes a list of states and returns downtime metrics describing them.
-func CrunchMetrics(states []State, end time.Time, co CrunchOptions) ([]*Metric, error) {
+func CrunchMetrics(states []State, end time.Time, co Config) ([]*Metric, error) {
 	var st State
 	var statesByService map[string][]State
 	var svcStates []State
