@@ -26,8 +26,6 @@ func ProcessFiles(arguments map[string]interface{}) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(conf)
-	return nil
 
 	metrics, err = CrunchMetrics(states, time.Now().Add(time.Duration(120*24)*time.Hour), conf)
 	for _, m := range metrics {

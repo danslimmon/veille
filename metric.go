@@ -79,8 +79,10 @@ func CrunchMetrics(states []State, end time.Time, co Config) ([]*Metric, error) 
 
 			for t = svcStates[0].Timestamp(); t.Before(end); t = t.Add(stepDur) {
 				var statesInStep []State
-				statesInStep = statesInInterval(svcStates, t, t.Add(stepDur))
-				downSecsInInterval, newStatus = downSecs(statesInStep, prevStatus, t, t.Add(stepDur))
+				if !inFoPo(co, st.Servicename(), t) {
+					statesInStep = statesInInterval(svcStates, t, t.Add(stepDur))
+				}
+				downSecsInInterval, newStatus = downSecs(statesInStep, co, prevStatus, t, t.Add(stepDur))
 				downSecsInWindow += downSecsInInterval
 				stepDowntimes = append(stepDowntimes, downSecsInInterval)
 				if len(stepDowntimes) > stepsInWindow {
@@ -118,7 +120,7 @@ func metricName(st State, windowSize int) string {
 //
 // It returns the integer number of seconds of downtime in the interval, as well as the
 // service's status at the end of the interval.
-func downSecs(statesInStep []State, prevStatus string, start, end time.Time) (int, string) {
+func downSecs(statesInStep []State, co Config, prevStatus string, start, end time.Time) (int, string) {
 	var lastChange time.Time
 	var st State
 	var rslt int
@@ -129,6 +131,7 @@ func downSecs(statesInStep []State, prevStatus string, start, end time.Time) (in
 			continue
 		}
 		if st.Status() != "CRITICAL" {
+			// The state has changed from CRITICAL to something else
 			rslt += int(st.Timestamp().Sub(lastChange) / time.Second)
 		}
 		prevStatus = st.Status()
@@ -139,6 +142,18 @@ func downSecs(statesInStep []State, prevStatus string, start, end time.Time) (in
 		rslt += int(end.Sub(lastChange) / time.Second)
 	}
 	return rslt, prevStatus
+}
+
+// inFoPo determines whether the given time is inside one of the false positive
+// windows defined in the given config.
+func inFoPo(co Config, service string, t time.Time) bool {
+	var fopo *FoPoPattern
+	for _, fopo = range co.FoPos {
+		if !t.Before(fopo.Start) && !t.After(fopo.End) && fopo.Match(service) {
+			return true
+		}
+	}
+	return false
 }
 
 // statesInInterval filters the given States down to the interval.
